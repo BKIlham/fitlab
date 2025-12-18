@@ -3,6 +3,8 @@ import Hero from '@/components/Hero'
 import FormSection from '@/components/FormSection'
 import HowItWorks from '@/components/HowItWorks'
 import Parameters from '@/components/Parameters'
+import FAQ from '@/components/FAQ'
+import Footer from '@/components/Footer'
 
 export default function Home() {
   return (
@@ -12,10 +14,9 @@ export default function Home() {
       <Parameters />
       <HowItWorks />
       <FormSection />
+      <FAQ />
       
-      <footer className="bg-[#0B897A] text-white/70 py-8 text-center text-sm">
-        <p>&copy; 2024 FitLab Indonesia. Part of Oneject.</p>
-      </footer>
+      <Footer />
     </main>
   )
 }
