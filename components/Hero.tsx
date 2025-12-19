@@ -44,30 +44,27 @@ export default function Hero() {
             
             <div className="flex items-center gap-3">
               <div className="flex -space-x-3">
-                 {/* Avatar 1 */}
                  <div className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-slate-200 relative">
                     <Image 
-                      src="https://i.pravatar.cc/100?img=1" 
+                      src="/images/oguz.jpg" 
                       alt="User 1" 
                       fill
                       sizes="40px"
                       className="object-cover" 
                     />
                  </div>
-                 {/* Avatar 2 */}
                  <div className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-slate-200 relative">
                     <Image 
-                      src="https://i.pravatar.cc/100?img=5" 
+                      src="/images/ben.jpg" 
                       alt="User 2" 
                       fill
                       sizes="40px"
                       className="object-cover" 
                     />
                  </div>
-                 {/* Avatar 3 */}
                  <div className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-slate-200 relative">
                     <Image 
-                      src="https://i.pravatar.cc/100?img=8" 
+                      src="/images/veras.jpg" 
                       alt="User 3" 
                       fill
                       sizes="40px"
@@ -83,8 +80,6 @@ export default function Hero() {
         </div>
 
         <div className="relative group">
-          
-          
           <div className="relative rounded-[2.5rem] bg-linear-to-b from-[#F0FDF9] to-white border border-white/50 shadow-2xl p-6 lg:p-8 backdrop-blur-sm">
              <div className="relative w-full aspect-4/3 rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center">
                <Image 
