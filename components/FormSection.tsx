@@ -5,20 +5,16 @@ import { useState } from 'react'
 export default function FormSection() {
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
     setStatus('idle')
+    setErrorMessage('')
 
     const formData = new FormData(e.currentTarget)
     
-    const wa = formData.get('whatsapp') as string;
-    if (wa.length < 9) {
-        alert('Nomor WhatsApp tidak valid (minimal 9 digit).');
-        setIsLoading(false);
-        return;
-    }
 
     const data = {
       nama: formData.get('nama'),
@@ -38,29 +34,45 @@ export default function FormSection() {
         body: JSON.stringify(data),
       })
 
+      const responseData = await response.json();
+
       if (response.ok) {
         setStatus('success')
-        e.currentTarget.reset() 
       } else {
         setStatus('error')
+        
+        let pesanError = responseData.error || "Gagal mengirim data.";
+
+        if (responseData.details) {
+            const errorKeys = Object.keys(responseData.details).filter(key => key !== '_errors');
+            
+            if (errorKeys.length > 0) {
+                const firstField = errorKeys[0]; 
+                
+                const firstMessage = responseData.details[firstField]?._errors?.[0];
+                
+                if (firstMessage) {
+                    pesanError = `${firstMessage} (${firstField.toUpperCase()})`;
+                }
+            }
+        }
+        
+        setErrorMessage(pesanError);
       }
+
     } catch (err) {
       setStatus('error')
+      setErrorMessage("Terjadi kesalahan koneksi. Cek internet Anda.")
     } finally {
       setIsLoading(false)
     }
   }
 
   const handleNumberInput = (e: React.FormEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value;
-    if (!/^\d*$/.test(value)) {
-      e.currentTarget.value = value.replace(/\D/g, '');
-    }
+    e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '');
   };
-
   const handleNameInput = (e: React.FormEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value;
-    e.currentTarget.value = value.replace(/[0-9]/g, '');
+    e.currentTarget.value = e.currentTarget.value.replace(/[0-9]/g, '');
   };
 
   return (
@@ -104,93 +116,47 @@ export default function FormSection() {
               
               <form onSubmit={handleSubmit} className="space-y-5">
                 
+                <div style={{ display: 'none', opacity: 0, position: 'absolute', left: '-9999px' }}>
+                   <input type="text" name="fax" tabIndex={-1} autoComplete="off" />
+                </div>
+
                 <div className="space-y-2">
                   <label className="text-sm font-extrabold text-[#0B897A] ml-2">NAMA LENGKAP</label>
-                  <input 
-                    name="nama" 
-                    required 
-                    type="text" 
-                    placeholder="Contoh: Budi Santoso" 
-                    onInput={handleNameInput}
-                    className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" 
-                  />
+                  <input name="nama" required type="text" onInput={handleNameInput} placeholder="Budi Santoso" className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" />
                 </div>
 
                 <div className="space-y-2">
                     <label className="text-sm font-extrabold text-[#0B897A] ml-2">AKUN INSTAGRAM</label>
-                    <input 
-                      name="instagram" 
-                      required 
-                      type="text" 
-                      placeholder="@username_kamu" 
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" 
-                    />
+                    <input name="instagram" required type="text" placeholder="@username" className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-extrabold text-[#0B897A] ml-2">EMAIL</label>
-                    <input 
-                      name="email" 
-                      required 
-                      type="email" 
-                      placeholder="budi@gmail.com" 
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" 
-                    />
+                    <input name="email" required type="email" placeholder="budi@gmail.com" className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-extrabold text-[#0B897A] ml-2">WHATSAPP</label>
-                    <input 
-                      name="whatsapp" 
-                      required 
-                      type="tel" 
-                      placeholder="0812xxxxxxxx" 
-                      onInput={handleNumberInput}
-                      inputMode="numeric"
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" 
-                    />
+                    <input name="whatsapp" required type="tel" onInput={handleNumberInput} placeholder="0812xxxxxxxx" className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-extrabold text-[#0B897A] ml-2">ALAMAT LENGKAP</label>
-                  <textarea 
-                    name="alamat" 
-                    required 
-                    rows={3} 
-                    placeholder="Jalan Mawar No. 10, RT 01/RW 02, Kel. Menteng..." 
-                    className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400 resize-none"
-                  ></textarea>
+                  <textarea name="alamat" required rows={3} placeholder="Jalan Mawar No. 10..." className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400 resize-none"></textarea>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                     <label className="text-sm font-extrabold text-[#0B897A] ml-2">KOTA/KEC</label>
-                    <input 
-                      name="kota" 
-                      required 
-                      type="text" 
-                      placeholder="Jakarta Selatan" 
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" 
-                    />
+                    <input name="kota" required type="text" placeholder="Jakarta Selatan" className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-extrabold text-[#0B897A] ml-2">KODE POS</label>
-                    <input 
-                      name="kodepos" 
-                      required 
-                      type="tel" 
-                      placeholder="12xxx" 
-                      onInput={handleNumberInput}
-                      maxLength={5}
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" 
-                    />
+                    <input name="kodepos" required type="tel" placeholder="12xxx" onInput={handleNumberInput} maxLength={5} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:bg-white focus:border-[#12B4A0] focus:ring-4 focus:ring-[#12B4A0]/10 transition-all outline-none font-bold text-slate-700 placeholder:font-normal placeholder:text-slate-400" />
                   </div>
                 </div>
-                <div style={{ display: 'none', opacity: 0, visibility: 'hidden' }}>
-                   <label htmlFor="fax">Fax Number</label>
-                   <input name="fax" type="text" id="fax" autoComplete="off" tabIndex={-1} />
-                </div>
+
                 <button 
                     type="submit" 
                     disabled={isLoading}
@@ -200,8 +166,8 @@ export default function FormSection() {
                 </button>
                 
                 {status === 'error' && (
-                  <div className="bg-red-50 text-red-500 text-sm font-bold p-3 rounded-xl text-center border border-red-100">
-                    Gagal mengirim. Coba cek koneksi internetmu.
+                  <div className="bg-red-50 text-red-500 text-sm font-bold p-4 rounded-xl text-center border-2 border-red-100 animate-pulse">
+                    ⚠️ {errorMessage || "Gagal mengirim. Cek koneksi internetmu."}
                   </div>
                 )}
                 
