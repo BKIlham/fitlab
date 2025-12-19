@@ -13,7 +13,6 @@ export default function FormSection() {
 
     const formData = new FormData(e.currentTarget)
     
-    // Validasi Manual Tambahan (Optional)
     const wa = formData.get('whatsapp') as string;
     if (wa.length < 9) {
         alert('Nomor WhatsApp tidak valid (minimal 9 digit).');
@@ -23,12 +22,13 @@ export default function FormSection() {
 
     const data = {
       nama: formData.get('nama'),
-      instagram: formData.get('instagram'), // Pastikan ini terkirim
+      instagram: formData.get('instagram'),
       email: formData.get('email'),
       whatsapp: formData.get('whatsapp'),
       alamat: formData.get('alamat'),
       kota: formData.get('kota'),
       kodepos: formData.get('kodepos'),
+      fax: formData.get('fax'),
     }
 
     try {
@@ -40,7 +40,7 @@ export default function FormSection() {
 
       if (response.ok) {
         setStatus('success')
-        // e.currentTarget.reset() 
+        e.currentTarget.reset() 
       } else {
         setStatus('error')
       }
@@ -51,7 +51,6 @@ export default function FormSection() {
     }
   }
 
-  // Fungsi untuk mencegah input selain angka
   const handleNumberInput = (e: React.FormEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
     if (!/^\d*$/.test(value)) {
@@ -59,7 +58,6 @@ export default function FormSection() {
     }
   };
 
-  // Fungsi untuk mencegah input angka (Khusus Nama)
   const handleNameInput = (e: React.FormEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
     e.currentTarget.value = value.replace(/[0-9]/g, '');
@@ -68,7 +66,6 @@ export default function FormSection() {
   return (
     <section id="form-section" className="py-24 px-4 bg-[#12B4A0] relative overflow-hidden">
       
-      {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(#ffffff 2px, transparent 2px)', backgroundSize: '40px 40px' }}>
       </div>
@@ -76,7 +73,6 @@ export default function FormSection() {
 
       <div className="max-w-4xl mx-auto relative z-10 grid lg:grid-cols-5 gap-8 items-center">
         
-        {/* LEFT TEXT */}
         <div className="lg:col-span-2 text-white text-center lg:text-left space-y-6">
           <div className="inline-block bg-[#FDBA19] text-[#0B897A] font-black px-4 py-1 rounded-full text-sm mb-2 transform -rotate-2 border-2 border-white/20">
             STOK TERBATAS
@@ -90,7 +86,6 @@ export default function FormSection() {
           </p>
         </div>
 
-        {/* RIGHT FORM */}
         <div className="lg:col-span-3">
           <div className="bg-white rounded-[2.5rem] p-6 md:p-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border-4 border-white/20 backdrop-blur-sm">
             
@@ -109,7 +104,6 @@ export default function FormSection() {
               
               <form onSubmit={handleSubmit} className="space-y-5">
                 
-                {/* NAMA (No Numbers) */}
                 <div className="space-y-2">
                   <label className="text-sm font-extrabold text-[#0B897A] ml-2">NAMA LENGKAP</label>
                   <input 
@@ -122,7 +116,6 @@ export default function FormSection() {
                   />
                 </div>
 
-                {/* INSTAGRAM */}
                 <div className="space-y-2">
                     <label className="text-sm font-extrabold text-[#0B897A] ml-2">AKUN INSTAGRAM</label>
                     <input 
@@ -134,7 +127,6 @@ export default function FormSection() {
                     />
                 </div>
 
-                {/* EMAIL & WA */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-extrabold text-[#0B897A] ml-2">EMAIL</label>
@@ -160,7 +152,6 @@ export default function FormSection() {
                   </div>
                 </div>
 
-                {/* ALAMAT */}
                 <div className="space-y-2">
                   <label className="text-sm font-extrabold text-[#0B897A] ml-2">ALAMAT LENGKAP</label>
                   <textarea 
@@ -172,7 +163,6 @@ export default function FormSection() {
                   ></textarea>
                 </div>
 
-                {/* KOTA & KODEPOS */}
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                     <label className="text-sm font-extrabold text-[#0B897A] ml-2">KOTA/KEC</label>
@@ -197,7 +187,10 @@ export default function FormSection() {
                     />
                   </div>
                 </div>
-
+                <div style={{ display: 'none', opacity: 0, visibility: 'hidden' }}>
+                   <label htmlFor="fax">Fax Number</label>
+                   <input name="fax" type="text" id="fax" autoComplete="off" tabIndex={-1} />
+                </div>
                 <button 
                     type="submit" 
                     disabled={isLoading}
