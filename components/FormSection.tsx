@@ -94,7 +94,7 @@ export default function FormSection() {
             <span className="text-[#FDBA19]">DISINI</span>
           </h2>
           <p className="text-white/90 text-lg font-medium leading-relaxed">
-            Isi data diri dan bawa pulang hadiahnya! Dipilih 3 pemenang setiap hari. Paket dikirim langsung ke rumah <br /> <strong className="underline decoration-[#FDBA19] decoration-4 underline-offset-4">100% GRATIS.</strong>
+            Isi data diri dan bawa pulang hadiahnya! Dipilih 3 pemenang setiap hari. Pemenang akan diumumkan di Instagram <Link href="https://www.instagram.com/fitlab.indonesia/" target='_blank' rel='noopener noreferrer' className='text-[#FDBA19] font-bold'>@fitlab.indonesia</Link> dan dihubungi melalui Whatsapp <br /> <strong className="underline decoration-[#FDBA19] decoration-4 underline-offset-4">100% GRATIS.</strong>
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export default function FormSection() {
                 </div>
                 <div>
                   <h3 className="text-3xl font-black text-[#0B897A] mb-2">Permintaan Diterima!</h3>
-                  <p className="text-slate-500 font-medium">Tim kami akan memproses pengiriman ke alamatmu.</p>
+                  <p className="text-slate-500 font-medium">Semoga Kamu Beruntung!</p>
                 </div>
                 <button onClick={() => setStatus('idle')} className="text-[#12B4A0] font-black underline hover:text-[#0B897A]">Kirim data lain</button>
               </div>
