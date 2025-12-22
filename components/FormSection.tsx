@@ -109,7 +109,7 @@ Setiap hari akan dipilih 3 pemenang yang akan diumumkan melalui Instagram dan di
                 </div>
                 <div>
                   <h3 className="text-3xl font-black text-[#0B897A] mb-2">Kamu Sudah Terdaftar</h3>
-                  <p className="text-slate-500 font-medium">Semoga Beruntung!</p>
+                  <p className="text-slate-500 font-medium">Pantau terus Sosmed kita ya! Semoga beruntung!</p>
                 </div>
                 <button onClick={() => setStatus('idle')} className="text-[#12B4A0] font-black underline hover:text-[#0B897A]">Kirim data lain</button>
               </div>
